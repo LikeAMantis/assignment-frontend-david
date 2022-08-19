@@ -2,10 +2,20 @@ import { Box, Stack } from "@mui/material";
 import produce from "immer";
 import { useReducer } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import dataLists, { List } from "../data";
+import dataLists, { Item, List } from "../data";
 import KanbanList from "./KanbanList";
 
-const dragReducer = produce((draft: List[], action) => {
+export type Action =
+    | {
+          type: "MOVE";
+          from: string;
+          to: string;
+          fromIndex: number;
+          toIndex: number;
+      }
+    | { type: "ADD"; listId: string; item: Item };
+
+const dragReducer = produce((draft: List[], action: Action) => {
     switch (action.type) {
         case "MOVE": {
             const fromId = draft.findIndex(

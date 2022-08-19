@@ -9,11 +9,12 @@ import {
 import { Droppable } from "react-beautiful-dnd";
 import KanbanItem from "./KanbanItem";
 import { List } from "../data";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
+import { Action } from "./Kanban";
 
 interface Props {
     list: List;
-    dispatch: (action: Object) => void;
+    dispatch: Dispatch<Action>;
 }
 
 function KanbanList({ list, dispatch }: Props) {
@@ -27,7 +28,7 @@ function KanbanList({ list, dispatch }: Props) {
                 listId: list.id,
                 item: {
                     title: value,
-                    id: Math.floor(Math.random() * 10000),
+                    id: Math.floor(Math.random() * 10000).toString(),
                 },
             });
             e.target.blur();
