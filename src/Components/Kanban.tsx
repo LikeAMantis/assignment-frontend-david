@@ -1,42 +1,9 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import produce from "immer";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import KanbanItem from "./KanbanItem";
+import dataLists, { List } from "../data";
 import KanbanList from "./KanbanList";
-
-export type Item = {
-    id: string | number;
-    title: string;
-    listId: string;
-};
-
-export type List = {
-    id: string;
-    title: string;
-    items: Item[];
-};
-
-const dataLists: List[] = [
-    {
-        id: "a",
-        title: "test",
-        items: [
-            { listId: "a", id: 1, title: "hallo" },
-            { listId: "a", id: 2, title: "wie" },
-            { listId: "a", id: 3, title: "gehts" },
-        ],
-    },
-    {
-        id: "b",
-        title: "projects",
-        items: [
-            { listId: "b", id: 4, title: "eins" },
-            { listId: "b", id: 5, title: "zwei" },
-            { listId: "b", id: 6, title: "drei" },
-        ],
-    },
-];
 
 const dragReducer = produce((draft: List[], action) => {
     switch (action.type) {
@@ -64,20 +31,7 @@ const dragReducer = produce((draft: List[], action) => {
 });
 
 export function Kanban() {
-    // const [lists, setLists] = useState<List[]>(dataLists);
     const [lists, dispatch] = useReducer(dragReducer, dataLists);
-
-    // function reorder<Type>(
-    //     list: Type[],
-    //     startIndex: number,
-    //     endIndex: number
-    // ): Type[] {
-    //     const result = Array.from(list);
-    //     const [removed] = result.splice(startIndex, 1);
-    //     result.splice(endIndex, 0, removed);
-
-    //     return result;
-    // }
 
     function handleOnDragEnd(result: DropResult) {
         if (result.reason === "DROP") {
@@ -97,7 +51,13 @@ export function Kanban() {
     return (
         <DragDropContext onDragEnd={handleOnDragEnd}>
             <Box sx={{ paddingBottom: 4 }}>
-                <Stack spacing={2} margin={5} direction="row">
+                <Stack
+                    spacing={2}
+                    margin={5}
+                    direction={{ xs: "column", md: "row" }}
+                    justifyContent="center"
+                    alignItems={{ xs: "center", md: "start" }}
+                >
                     {lists.map((list: List) => (
                         <KanbanList
                             key={list.id}
