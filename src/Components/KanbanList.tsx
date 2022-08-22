@@ -36,7 +36,7 @@ function KanbanList({ list, dispatch }: Props) {
     }
 
     return (
-        <Droppable droppableId={list.id} type="Items">
+        <Droppable droppableId={list.id} direction="vertical" type="Items">
             {(provided, snapshot) => (
                 <Card
                     ref={provided.innerRef}
@@ -57,6 +57,13 @@ function KanbanList({ list, dispatch }: Props) {
                                     key={item.id}
                                     item={item}
                                     index={index}
+                                    onDelete={() =>
+                                        dispatch({
+                                            type: "REMOVE",
+                                            listId: list.id,
+                                            itemId: item.id,
+                                        })
+                                    }
                                 />
                             ))}
                             {provided.placeholder}

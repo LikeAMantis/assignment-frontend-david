@@ -13,7 +13,8 @@ export type Action =
           fromIndex: number;
           toIndex: number;
       }
-    | { type: "ADD"; listId: string; item: Item };
+    | { type: "ADD"; listId: string; item: Item }
+    | { type: "REMOVE"; listId: string; itemId: string };
 
 const dragReducer = produce((draft: List[], action: Action) => {
     switch (action.type) {
@@ -35,6 +36,16 @@ const dragReducer = produce((draft: List[], action: Action) => {
             );
 
             draft[listId].items.push(action.item);
+            break;
+        }
+        case "REMOVE": {
+            const listId = draft.findIndex(
+                (list: List) => list.id === action.listId
+            );
+
+            draft[listId].items = draft[listId].items.filter(
+                (item) => item.id !== action.itemId
+            );
             break;
         }
     }
