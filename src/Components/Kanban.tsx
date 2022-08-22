@@ -17,35 +17,27 @@ export type Action =
     | { type: "REMOVE"; listId: string; itemId: string };
 
 const dragReducer = produce((draft: List[], action: Action) => {
+    function getList(listId: string): List {
+        const listIndex = draft.findIndex((list: List) => list.id === listId);
+        return draft[listIndex];
+    }
+
     switch (action.type) {
         case "MOVE": {
-            const fromId = draft.findIndex(
-                (list: List) => list.id === action.from
-            );
-            const toId = draft.findIndex((list: List) => list.id === action.to);
+            const fromList = getList(action.from);
+            const toList = getList(action.to);
 
-            draft[fromId].items = draft[fromId].items || [];
-            draft[toId].items = draft[toId].items || [];
-            const [removed] = draft[fromId].items.splice(action.fromIndex, 1);
-            draft[toId].items.splice(action.toIndex, 0, removed);
+            const [removed] = fromList.items.splice(action.fromIndex, 1);
+            toList.items.splice(action.toIndex, 0, removed);
             break;
         }
         case "ADD": {
-            const listId = draft.findIndex(
-                (list: List) => list.id === action.listId
-            );
-
-            draft[listId].items.push(action.item);
+            getList(action.listId).items.push(action.item);
             break;
         }
         case "REMOVE": {
-            const listId = draft.findIndex(
-                (list: List) => list.id === action.listId
-            );
-
-            draft[listId].items = draft[listId].items.filter(
-                (item) => item.id !== action.itemId
-            );
+            const list = getList(action.listId);
+            list.items = list.items.filter((item) => item.id !== action.itemId);
             break;
         }
     }
